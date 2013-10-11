@@ -120,6 +120,7 @@ function compact(io::IOBuffer)
     io.ptr = 1
     return true
 end
+
 function ensureroom(io::IOBuffer, nshort::Int)
     if !io.writable error("ensureroom failed") end
     if !io.seekable
@@ -141,6 +142,21 @@ function ensureroom(io::IOBuffer, nshort::Int)
     end
     return io
 end
+
+function alloc_request(buffer::IOBuffer, recommended_size::Integer)
+    ensureroom(buffer, int(recommended_size))
+    ptr = buffer.append ? buffer.size + 1 : buffer.ptr
+    return (pointer(buffer.data, ptr), length(buffer.data)-ptr+1)
+end
+
+function notify_filled(buffer::IOBuffer, nread::Int)
+    if buffer.append
+        buffer.size += nread
+    else
+        buffer.ptr += nread
+    end
+end
+
 eof(io::IOBuffer) = (io.ptr-1 == io.size)
 function close(io::IOBuffer)
     if io.writable
