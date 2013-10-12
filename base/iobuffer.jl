@@ -156,6 +156,7 @@ function notify_filled(buffer::IOBuffer, nread::Int)
         buffer.ptr += nread
     end
 end
+notify_filled(buffer::IOBuffer, nread::Int, base::Ptr{Void}, len::Int32) = notify_filled(buffer, nread)
 
 eof(io::IOBuffer) = (io.ptr-1 == io.size)
 function close(io::IOBuffer)
