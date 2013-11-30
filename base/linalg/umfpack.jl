@@ -295,15 +295,15 @@ Ac_ldiv_B{Tb<:Complex}(fact::UmfpackLU{Float64}, b::Vector{Tb}) = fact'\b
 
 ### Solve directly with matrix
 
-(\)(S::SparseMatrixCSC, b::Vector) = lufact(S) \ b
-At_ldiv_B{T<:UMFVTypes}(S::SparseMatrixCSC{T}, b::Vector{T}) = solve(lufact(S), b, UMFPACK_Aat)
-At_ldiv_B{Ts<:UMFVTypes,Tb<:Number}(S::SparseMatrixCSC{Ts}, b::Vector{Tb}) = At_ldiv_B(S, convert(Vector{Ts}, b))
-function At_ldiv_B{Tb<:Complex}(S::SparseMatrixCSC{Float64}, b::Vector{Tb})
-    F = lufact(S)
-    r = solve(F, [convert(Float64,real(be)) for be in b], UMFPACK_Aat)
-    i = solve(F, [convert(Float64,imag(be)) for be in b], UMFPACK_Aat)
-    Complex128[r[k]+im*i[k] for k = 1:length(r)]
-end
+# (\)(S::SparseMatrixCSC, b::Vector) = lufact(S) \ b
+# At_ldiv_B{T<:UMFVTypes}(S::SparseMatrixCSC{T}, b::Vector{T}) = solve(lufact(S), b, UMFPACK_Aat)
+# At_ldiv_B{Ts<:UMFVTypes,Tb<:Number}(S::SparseMatrixCSC{Ts}, b::Vector{Tb}) = At_ldiv_B(S, convert(Vector{Ts}, b))
+# function At_ldiv_B{Tb<:Complex}(S::SparseMatrixCSC{Float64}, b::Vector{Tb})
+#     F = lufact(S)
+#     r = solve(F, [convert(Float64,real(be)) for be in b], UMFPACK_Aat)
+#     i = solve(F, [convert(Float64,imag(be)) for be in b], UMFPACK_Aat)
+#     Complex128[r[k]+im*i[k] for k = 1:length(r)]
+# end
 Ac_ldiv_B{T<:UMFVTypes}(S::SparseMatrixCSC{T}, b::Vector{T}) = solve(lufact(S), b, UMFPACK_At)
 Ac_ldiv_B{Ts<:UMFVTypes,Tb<:Number}(S::SparseMatrixCSC{Ts}, b::Vector{Tb}) = Ac_ldiv_B(S, convert(Vector{Ts}, b))
 function Ac_ldiv_B{Tb<:Complex}(S::SparseMatrixCSC{Float64}, b::Vector{Tb})
